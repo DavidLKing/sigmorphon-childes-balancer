@@ -47,6 +47,7 @@ class Balance:
         return data
 
     def balance(self, cdi, data):
+        cdiTotal = len(cdi)
         sortedOutput = []
         sortedCdi = sorted(cdi.items(), key=operator.itemgetter(1))
         sortedCdi.reverse()
@@ -62,6 +63,7 @@ class Balance:
                     devtest.append(line)
         print(len(sortedOutput), "found in Childes")
         print(len(devtest), "left for dev and test")
+        print("Childes coverage:", len(sortedOutput) / cdiTotal)
         return sortedOutput, devtest
 
     def writeout(self, found, devtest):
