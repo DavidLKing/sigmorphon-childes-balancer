@@ -15,6 +15,10 @@ class Rearrange:
             assert(len(line) == 3)
             lemma = list(line[0])
             target = list(line[1])
+            # sigmorphon and unimorph features are the same
+            # at least in German
+            # diff:
+            # sig: feature=f; unimorph: f
             feats = line[2]
             feats = feats.split(';')
             _input = feats + lemma
