@@ -5,10 +5,21 @@ import operator
 import nltk
 import argparse
 import pdb
+from math import *
+
+def loadingBar(i, N, size):
+    percent = float(i) / float(N)
+    sys.stdout.write("\r"
+                     + str(int(i)).rjust(3, '0')
+                     +"/"
+                     +str(int(N)).rjust(3, '0')
+                     + ' ['
+                     + '='*ceil(percent*size)
+                     + ' '*floor((1-percent)*size)
+                     + ']')
+
 
 # nltk.data.path.append("/scratch2/king/nltk_data")
-
-
 
 class Freq:
     def __init__(self):
@@ -21,17 +32,55 @@ class Freq:
         return freqs
 
     def getFreqs(self, lines):
+        linnum = 0
+        total = len(lines)
         print("Counting the frequencies in CHILDES")
         freqs = {}
         for l in lines:
+            linnum += 1
+            # loadingBar(linnum, total, 40)
+            if linnum % 100000 == 0:
+                print("On", linnum, "of", total)
             if l[0] not in ['@']:
-                if not l.startswith('*CHI'):
+                if not l.lower().startswith('*chi'):
                     l = l.split('\t')
                     for word in nltk.word_tokenize(l[1].strip()):
                         if word not in freqs:
                             freqs[word] = 0
                         freqs[word] += 1
         return freqs
+
+    def getUDFreqs(self, lines):
+        linnum = 0
+        total = len(lines)
+        print("Counting the frequencies in UDs")
+        freqs = {}
+        lexfreqs = {}
+        lex2form = {}
+        form2lex = {}
+        for l in lines:
+            linnum += 1
+            # loadingBar(linnum, total, 40)
+            if linnum % 100000 == 0:
+                print("On", linnum, "of", total)
+            if l[0] not in ['#']:
+                l = l.split('\t')
+                if len(l) > 1:
+                    wordform = l[1].lower()
+                    lexeme = l[2].lower()
+                    if wordform not in freqs:
+                        freqs[wordform] = 0
+                    if lexeme not in lexfreqs:
+                        lexfreqs[lexeme] = 0
+                    if lexeme not in lex2form:
+                        lex2form[lexeme] = set()
+                    # if wordform not in form2lex:
+                    # TODO how to deal with homomorphs?
+                    form2lex[wordform] = lexeme
+                    freqs[wordform] += 1
+                    lexfreqs[lexeme] += 1
+                    lex2form[lexeme].add(wordform)
+        return freqs, lexfreqs, lex2form, form2lex
 
 class Balance:
     def __init__(self):
