@@ -42,7 +42,7 @@ class Freq:
             if linnum % 100000 == 0:
                 print("On", linnum, "of", total)
             if l[0] not in ['@']:
-                if not l.lower().startswith('*chi'):
+                if not l.lower().startswith('*chi') and l.startswith("*"):
                     l = l.split('\t')
                     for word in nltk.word_tokenize(l[1].strip()):
                         if word not in freqs:
