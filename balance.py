@@ -120,7 +120,7 @@ class Balance:
         return winner, poss_feats
 
     def clean_feats(self, poss_feats, line):
-        line = line.upper()
+        # line = line.upper()
         feat = set(line.split(';'))
         return self.how_close(feat, poss_feats) 
     
@@ -158,8 +158,8 @@ class Balance:
                         pdb.set_trace()
                     feats = line[5]
                     if feats != "_":
+                        feats, poss_feat = self.clean_feats(poss_feats, feats)
                         entry = line[2] + '\t' + line[1] + '\t' + feats
-                        entry, poss_feat = self.clean_feats(poss_feats, feats)
                         if key not in dataDict:
                             dataDict[key] = {}
                         if entry not in dataDict[key]:
@@ -191,8 +191,14 @@ class Balance:
         sortedCdi.reverse()
         for sc in sortedCdi:
             if sc[0] in data and sc[0] not in string.punctuation:
+                # gountil = cdi[sc[0]]
+                # while gountil > 0:
                 for line in data[sc[0]]:
+                    # if len(line.split('\t')) != 3:
+                        # print("This entry is missing something:\n", line)
+                        # pdb.set_trace()
                     sortedOutput.append(line)
+                    # gountil -= 1
         devtest = []
         for word in data:
             if word not in sortedCdi and word not in string.punctuation:
